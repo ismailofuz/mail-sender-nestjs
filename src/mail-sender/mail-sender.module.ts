@@ -12,6 +12,7 @@ import { join } from 'path';
       useFactory: async (config: ConfigService) => ({
         transport: {
           host: config.get('MAIL_HOST'),
+          port: 2525,
           secure: false,
           auth: {
             user: config.get('MAIL_USER'),
@@ -19,7 +20,7 @@ import { join } from 'path';
           },
         },
         defaults: {
-          from: `"No reply" <${config.get('MAIL_FORM')}>`,
+          from: `"No reply" <${config.get('MAIL_FROM')}>`,
         },
         template: {
           dir: join(__dirname, 'templates'),

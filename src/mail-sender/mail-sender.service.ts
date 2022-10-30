@@ -1,26 +1,27 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { CreateMailSenderDto } from './dto/create-mail-sender.dto';
-import { UpdateMailSenderDto } from './dto/update-mail-sender.dto';
 
 @Injectable()
 export class MailSenderService {
-  create(createMailSenderDto: CreateMailSenderDto) {
-    return 'This action adds a new mailSender';
+  constructor(private mailerService: MailerService) {}
+
+  async sendEmail(user: CreateMailSenderDto, token: string) {
+    const url = `example.com/auth/confirm?token=${token}`;
+    await this.mailerService.sendMail({
+      to: user.email,
+      subject: 'Hello world!',
+      template: 'confirmation',
+      context: {
+        name: user.name,
+        url,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all mailSender`;
+  async signUp(user: CreateMailSenderDto) {
+    const token = Math.floor(1000 + Math.random() * 9000).toString();
+    await this.sendEmail(user, token);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} mailSender`;
-  }
-
-  update(id: number, updateMailSenderDto: UpdateMailSenderDto) {
-    return `This action updates a #${id} mailSender`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} mailSender`;
-  }
 }
